@@ -1,6 +1,7 @@
 <template>
   <div class="app-box">
     <p>请打开控制台查看操作反馈，这里懒得写了</p>
+    <p>当前状态：{{ msg }}</p>
     <div>
       <p>1 点击初始化</p>
       <button @click="init">初始化</button>
@@ -41,7 +42,8 @@ export default {
       client: null,
       channel: '123456',
       uid,
-      localStream: null
+      localStream: null,
+      msg: '未初始化',
     }
   },
 
@@ -49,6 +51,8 @@ export default {
   },
   methods: {
     init () {
+      if (this.client) return
+
       this.client = STEngine.createClient()
 
       this.client.on('added-remote-stream', (e) => {
@@ -79,24 +83,27 @@ export default {
       })
 
       this.client.init()
+
+      this.msg = '初始化完成'
     },
 
     join () {
       if (!this.client) return console.log('尚未初始化')
       this.client.join(this.channel, this.uid)
+      this.msg = '加入房间'
     },
 
     leave () {
       if (!this.client) return console.log('尚未初始化')
-      this.client.leave();
-      [...this.$refs.videos.children].forEach(child => this.$refs.videos.removeChild(child))
+      this.client.leave()
+      this.msg = '离开房间'
     },
 
     async publish () {
       if (!this.client) return console.log('尚未初始化')
       const localStream = this.localStream =  STEngine.createStream({
         video: true,
-        audio: true
+        audio: false
       })
 
       await localStream.init()
@@ -104,11 +111,13 @@ export default {
       this.$refs.own.srcObject = localStream.stream
 
       this.client.publish(localStream)
+      this.msg = '开始推流'
     },
 
     unpublish () {
       if (!this.client) return console.log('尚未初始化')
       this.client.unpublish(this.localStream)
+      this.msg = '停止推流'
     }
   }
 }
