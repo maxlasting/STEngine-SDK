@@ -103,7 +103,7 @@ export default {
       if (!this.client) return console.log('尚未初始化')
       const localStream = this.localStream =  STEngine.createStream({
         video: true,
-        audio: false
+        audio: true
       })
 
       await localStream.init()
