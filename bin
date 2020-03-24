@@ -8,9 +8,7 @@ const dirname = process.cwd()
 
 const { join } = require('path')
 
-if (process.env.NODE_ENV === 'production') {
-  const config = require('./build/webpack.build.config.js')
-
+const build = function (config) {
   webpack(config, function (err, stats) {
     if (err) throw err
     process.stdout.write(
@@ -25,6 +23,18 @@ if (process.env.NODE_ENV === 'production') {
     console.log(chalk.cyan('  打包完成.\n'))
     process.exit(0)
   })
+}
+
+if (process.env.NODE_ENV === 'production') {
+  const config = require('./build/webpack.build.config.js')
+
+  build(config)
+}
+
+if (process.env.NODE_ENV === 'example') {
+  const config = require('./build/webpack.example.config.js')
+
+  build(config)
 }
 
 if (process.env.NODE_ENV === 'development') {
