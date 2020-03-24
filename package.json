@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development node bin",
-    "build": "cross-env NODE_ENV=production node bin",
-    "start": "cross-env NODE_ENV=example node bin"
+    "build:dist": "cross-env NODE_ENV=production node bin",
+    "build:example": "cross-env NODE_ENV=example node bin",
+    "build": "npm run build:dist && npm run build:example"
   },
   "author": "",
   "license": "ISC",
